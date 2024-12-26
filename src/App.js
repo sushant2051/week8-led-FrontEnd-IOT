@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
-import './App.css';
+import { useEffect, useRef, useState } from "react";
+import "./App.css";
 
 function App() {
   const wsRef = useRef(null);
   const [ws, setWs] = useState(null);
-  const [bulbState, setBulbState] = useState('OFF'); // Initial state of the bulb
+  const [bulbState, setBulbState] = useState("OFF"); // Initial state of the bulb
 
   useEffect(() => {
-    wsRef.current = new WebSocket('wss://your-domain.com'); // Replace with your server URL
+    wsRef.current = new WebSocket("wss://week8-ws-jzjo.onrender.com"); // Replace with your server URL
     setWs(wsRef.current);
   }, []);
 
@@ -15,18 +15,18 @@ function App() {
     if (!ws) return;
 
     ws.onopen = () => {
-      console.log('Connected to the server');
-      ws.send(JSON.stringify({ message: 'fetch' }));
+      console.log("Connected to the server");
+      ws.send(JSON.stringify({ message: "fetch" }));
     };
 
     ws.onmessage = (message) => {
-      console.log('Received message:', message.data);
+      console.log("Received message:", message.data);
       const data = JSON.parse(message.data);
       setBulbState(data?.state);
     };
 
     ws.onclose = () => {
-      console.log('Disconnected from the server');
+      console.log("Disconnected from the server");
     };
 
     return () => {
@@ -35,34 +35,34 @@ function App() {
   }, [ws]);
 
   const toggleBulbState = () => {
-    const state = bulbState === 'OFF' ? 'ON' : 'OFF';
+    const state = bulbState === "OFF" ? "ON" : "OFF";
 
     // Send the new state to the server
     try {
-      ws.send(JSON.stringify({ message: 'update', name: 'Led', state: state }));
+      ws.send(JSON.stringify({ message: "update", name: "Led", state: state }));
     } catch (error) {
-      console.log('Error:', error.message);
+      console.log("Error:", error.message);
     }
   };
 
   return (
     <div
-      style={{ height: '100vh' }}
-      className='container pt-5 d-flex justify-content-center align-items-center'
+      style={{ height: "100vh" }}
+      className="container pt-5 d-flex justify-content-center align-items-center"
     >
-      <div className='gadget-card d-flex justify-content-between align-items-center p-4 w-50'>
+      <div className="gadget-card d-flex justify-content-between align-items-center p-4 w-50">
         <img
           src={
-            bulbState === 'ON'
-              ? 'https://github.com/officialmembypoudel/dummy/blob/main/light-bulb-on.svg?raw=true'
-              : 'https://github.com/officialmembypoudel/dummy/blob/main/light-bulb-off.svg?raw=true'
+            bulbState === "ON"
+              ? "https://github.com/officialmembypoudel/dummy/blob/main/light-bulb-on.svg?raw=true"
+              : "https://github.com/officialmembypoudel/dummy/blob/main/light-bulb-off.svg?raw=true"
           }
-          alt='Bulb'
+          alt="Bulb"
           onClick={toggleBulbState}
-          style={{ cursor: 'pointer', width: '100px', height: 'auto' }}
+          style={{ cursor: "pointer", width: "100px", height: "auto" }}
         />
 
-        <h3 className='mt-4'>Bulb is {bulbState}</h3>
+        <h3 className="mt-4">Bulb is {bulbState}</h3>
       </div>
     </div>
   );
